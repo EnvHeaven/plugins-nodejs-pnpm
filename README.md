@@ -1,19 +1,19 @@
-# `@envheaven/plugins/nodejs-pnpm`
+# `@envheaven/plugins-nodejs-pnpm`
 
-`@envheaven/plugins/nodejs-pnpm@0.1.0` is a focused Node.js plugin for running pnpm-backed execution specs. It exports explicit metadata, normalizes raw or env-map style inputs, inspects project readiness, and executes `pnpm run` or `pnpm exec` with structured `child_process.spawn()` calls.
+`@envheaven/plugins-nodejs-pnpm@0.1.0` is a focused Node.js plugin for running pnpm-backed execution specs. It exports explicit metadata, normalizes raw or env-map style inputs, inspects project readiness, and executes `pnpm run` or `pnpm exec` with structured `child_process.spawn()` calls.
 
 Linux is supported directly. Windows support is implemented by delegating execution through WSL from the package itself.
 
 ## Install
 
 ```bash
-npm install @envheaven/plugins/nodejs-pnpm
+npm install @envheaven/plugins-nodejs-pnpm
 ```
 
 ## API
 
 ```ts
-import { inspect, execute, metadata, normalizeSpec } from "@envheaven/plugins/nodejs-pnpm";
+import { inspect, execute, metadata, normalizeSpec } from "@envheaven/plugins-nodejs-pnpm";
 ```
 
 ## Supported kinds
@@ -26,7 +26,7 @@ import { inspect, execute, metadata, normalizeSpec } from "@envheaven/plugins/no
 Use `pnpm exec` for locally installed CLIs. This plugin does not require a global Angular CLI.
 
 ```ts
-import { inspect, execute } from "@envheaven/plugins/nodejs-pnpm";
+import { inspect, execute } from "@envheaven/plugins-nodejs-pnpm";
 
 const spec = {
   kind: "pnpm-exec",
@@ -47,7 +47,7 @@ if (inspection.status === "ready") {
 Use `pnpm run` for `package.json` scripts.
 
 ```ts
-import { inspect, execute } from "@envheaven/plugins/nodejs-pnpm";
+import { inspect, execute } from "@envheaven/plugins-nodejs-pnpm";
 
 const spec = {
   kind: "pnpm-run",
