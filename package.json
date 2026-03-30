@@ -1,0 +1,41 @@
+{
+  "name": "@envheaven/plugins/nodejs-pnpm",
+  "version": "0.1.0",
+  "description": "Spec-first pnpm execution plugin for envheaven and workspace-based Node.js projects.",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "npm run build",
+    "test": "tsx --test tests/**/*.test.ts"
+  },
+  "keywords": [
+    "envheaven",
+    "plugin",
+    "pnpm",
+    "nodejs",
+    "workspace"
+  ],
+  "peerDependencies": {
+    "envheaven": "^0.1.0"
+  },
+  "peerDependenciesMeta": {
+    "envheaven": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  }
+}
