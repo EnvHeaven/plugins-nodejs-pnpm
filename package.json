@@ -1,6 +1,6 @@
 {
   "name": "@envheaven/plugins-nodejs-pnpm",
-  "version": "0.1.81",
+  "version": "0.1.84-exp.0",
   "description": "Spec-first pnpm execution plugin for envheaven and workspace-based Node.js projects.",
   "license": "MIT",
   "type": "commonjs",
