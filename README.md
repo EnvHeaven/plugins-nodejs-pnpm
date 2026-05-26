@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://envheaven.com">
-    <img src="./docs/readme/logo/envheaven-logo.png" alt="EnvHeaven" width="96" />
+    <img src="./docs/readme/logo/envheaven-logo.svg" alt="EnvHeaven" width="96" />
   </a>
 </p>
 
@@ -27,7 +27,14 @@ It supports:
 ## Install
 
 ```sh
+# release track
+npm install @envheaven/plugins-nodejs-pnpm@release
+
+# npm default alias for the release track
 npm install @envheaven/plugins-nodejs-pnpm
+
+# experimental track
+npm install @envheaven/plugins-nodejs-pnpm@exp
 ```
 
 Install a compatible EnvHeaven host package in the same workflow:
@@ -81,7 +88,7 @@ EnvHeaven loads the plugin by package name and calls `inspect()` before `execute
 
 - [`envheaven`](https://www.npmjs.com/package/envheaven)
 - [`@envheaven/plugins-firebase-hosting-deploy`](https://www.npmjs.com/package/@envheaven/plugins-firebase-hosting-deploy)
-- [`@envheaven/plugins-offiline-web-ui`](https://www.npmjs.com/package/@envheaven/plugins-offiline-web-ui)
+- `@envheaven/plugins-offline-web-ui` (prepared corrected Offline Web UI package)
 
 ## License
 

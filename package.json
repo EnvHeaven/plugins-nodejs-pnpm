@@ -8,7 +8,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "docs/readme/logo/envheaven-logo.svg"
   ],
   "engines": {
     "node": ">=20"
@@ -25,6 +26,17 @@
     "nodejs",
     "workspace"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EnvHeaven/plugins-nodejs-pnpm.git"
+  },
+  "homepage": "https://envheaven.com",
+  "bugs": {
+    "url": "https://github.com/EnvHeaven/plugins-nodejs-pnpm/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "envheaven": "^0.1.0"
   },
