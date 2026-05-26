@@ -1,144 +1,88 @@
-# `@envheaven/plugins-nodejs-pnpm`
+<p align="center">
+  <a href="https://envheaven.com">
+    <img src="./docs/readme/logo/envheaven-logo.png" alt="EnvHeaven" width="96" />
+  </a>
+</p>
 
-`@envheaven/plugins-nodejs-pnpm@0.1.0` is a focused Node.js plugin for running pnpm-backed execution specs. It exports explicit metadata, normalizes raw or env-map style inputs, inspects project readiness, and executes `pnpm run` or `pnpm exec` with structured `child_process.spawn()` calls.
+# @envheaven/plugins-nodejs-pnpm
 
-Linux is supported directly. Windows support is implemented by delegating execution through WSL from the package itself.
+> EnvHeaven plugin for pnpm-backed Node.js workflows.
+
+[![npm version](https://img.shields.io/npm/v/@envheaven/plugins-nodejs-pnpm)](https://www.npmjs.com/package/@envheaven/plugins-nodejs-pnpm)
+[![license](https://img.shields.io/npm/l/@envheaven/plugins-nodejs-pnpm)](https://www.npmjs.com/package/@envheaven/plugins-nodejs-pnpm)
+
+> **Experimental 0.x:** EnvHeaven is currently in experimental `0.x` development. APIs, CLI commands, plugin contracts, package names, and release behavior may change before `1.0.0`. Pin versions and read release notes before using it in production workflows.
+
+## What it does
+
+This plugin lets EnvHeaven inspect and execute Node.js project steps through pnpm.
+
+It supports:
+
+- `pnpm-run` for `package.json` scripts.
+- `pnpm-exec` for locally installed CLI binaries.
+- readiness diagnostics for missing `cwd`, `package.json`, `node_modules`, pnpm, scripts, or local CLIs.
+- structured `child_process.spawn()` execution through the EnvHeaven plugin contract.
 
 ## Install
 
-```bash
+```sh
 npm install @envheaven/plugins-nodejs-pnpm
 ```
 
-## API
+Install a compatible EnvHeaven host package in the same workflow:
 
-```ts
-import { inspect, execute, metadata, normalizeSpec } from "@envheaven/plugins-nodejs-pnpm";
+```sh
+npm install envheaven
 ```
 
-## Supported kinds
+## Use
 
-- `pnpm-exec`
-- `pnpm-run`
+Example execution spec:
 
-## `pnpm-exec` example
-
-Use `pnpm exec` for locally installed CLIs. This plugin does not require a global Angular CLI.
-
-```ts
-import { inspect, execute } from "@envheaven/plugins-nodejs-pnpm";
-
-const spec = {
-  kind: "pnpm-exec",
-  cwd: "/workspace/apps/web",
-  bin: "ng",
-  args: ["serve", "--host", "0.0.0.0"],
-};
-
-const inspection = await inspect(spec);
-
-if (inspection.status === "ready") {
-  await execute(spec);
+```jsonc
+{
+  "pluginPackage": "@envheaven/plugins-nodejs-pnpm",
+  "kind": "pnpm-run",
+  "script": "build",
+  "cwd": "./artifacts/web-site-01-fe-01"
 }
 ```
 
-## `pnpm-run` example
+For local CLIs, use `pnpm-exec`:
 
-Use `pnpm run` for `package.json` scripts.
-
-```ts
-import { inspect, execute } from "@envheaven/plugins-nodejs-pnpm";
-
-const spec = {
-  kind: "pnpm-run",
-  cwd: "/workspace/apps/api",
-  script: "start",
-  args: ["--port", "3000"],
-};
-
-const inspection = await inspect(spec);
-
-if (inspection.status === "ready") {
-  await execute(spec);
+```jsonc
+{
+  "pluginPackage": "@envheaven/plugins-nodejs-pnpm",
+  "kind": "pnpm-exec",
+  "bin": "ng",
+  "args": ["build"],
+  "cwd": "./artifacts/web-site-01-fe-01"
 }
 ```
 
-## Missing `package.json`
+EnvHeaven loads the plugin by package name and calls `inspect()` before `execute()` when the resolved plan is runnable.
 
-When no `package.json` can be found from `cwd` upward, `inspect()` returns `blocked` with an explicit diagnostic and a suggested action.
+## Requirements
 
-```ts
-const result = await inspect({
-  kind: "pnpm-run",
-  cwd: "/workspace/empty-dir",
-  script: "start",
-});
+- Node.js `>=20`.
+- EnvHeaven host package.
+- pnpm available in the target workflow.
+- A valid `package.json` near the configured working directory.
 
-result.status;
-// "blocked"
-```
+## Current limitations
 
-## Missing dependencies
+- No automatic installation of Node.js, pnpm, or project dependencies.
+- No package-manager abstraction beyond pnpm.
+- No fallback to global CLIs for `pnpm-exec`.
+- Plugin contracts may change before EnvHeaven `1.0.0`.
 
-When `node_modules` cannot be found in the package or workspace tree, `inspect()` returns `partial` and suggests running `pnpm install`.
+## Related
 
-```ts
-const result = await inspect({
-  kind: "pnpm-exec",
-  cwd: "/workspace/apps/web",
-  bin: "ng",
-  args: ["serve"],
-});
+- [`envheaven`](https://www.npmjs.com/package/envheaven)
+- [`@envheaven/plugins-firebase-hosting-deploy`](https://www.npmjs.com/package/@envheaven/plugins-firebase-hosting-deploy)
+- [`@envheaven/plugins-offiline-web-ui`](https://www.npmjs.com/package/@envheaven/plugins-offiline-web-ui)
 
-result.status;
-// "partial"
-```
+## License
 
-## Diagnostics behavior
-
-`inspect(spec)` validates:
-
-- Node availability
-- pnpm availability
-- `cwd` existence
-- `package.json` existence
-- script existence for `pnpm-run`
-- local CLI resolvability for `pnpm-exec`
-- dependency installation state
-
-Statuses mean:
-
-- `ready`: all required checks passed and the spec can be executed
-- `partial`: the project shape is recognized, but setup is incomplete
-- `blocked`: the spec or runtime is fundamentally invalid for execution
-
-Each result includes:
-
-- `diagnostics`
-- `suggestedActions`
-- normalized `spec`
-- execution details such as command, args, cwd, and transport
-
-## Env-map input aliases
-
-The package accepts normalized fields and env-map style aliases:
-
-```ts
-const result = normalizeSpec({
-  Kind: "pnpm-run",
-  Cwd: "/workspace/apps/api",
-  Script: "start",
-  Args: ["--port", "3000"],
-  Env: {
-    NODE_ENV: "development",
-  },
-});
-```
-
-## v0.1.0 limitations
-
-- No automatic installation of Node.js, pnpm, or dependencies
-- No fallback to global CLIs for `pnpm-exec`
-- No package-manager abstraction beyond pnpm
-- No native Windows execution path; Windows always delegates through WSL
-- No direct runtime dependency on `envheaven`; integration is adapter-oriented
+MIT, as declared in `package.json`.
